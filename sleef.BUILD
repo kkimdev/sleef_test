@@ -1,5 +1,5 @@
 cc_library(
-    name = "sleef",
+    name = "sleef-lib",
     srcs = glob([
         "purec/*.h",
         "simd/*.h",
@@ -14,11 +14,12 @@ cc_library(
         "simd/sleefsimd.h",
     ],
     copts = [
-        "-std=gnu11",
-        "-DENABLE_SSE2",
+        "-xc++",
+        "-std=c++14",
         "-ffp-contract=off",
-        "-Iexternal/sleef/purec",
-        "-Iexternal/sleef/simd",
+        # TODO: This should depend on CPU architecture.
+        "-DENABLE_SSE2",
     ],
+    # TODO: More restrictive visibility setting.
     visibility = ["//visibility:public"],
 )

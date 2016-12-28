@@ -1,11 +1,12 @@
+#include <cmath>
 #include <cstdint>
 #include <iostream>
 #include <limits>
-#include <cmath>
 
 #include <pmmintrin.h>
 
-#include <sleef.h>
+#include "purec/sleef.h"
+#include "simd/sleefsimd.h"
 
 union FloatInt {
   int32_t i;
