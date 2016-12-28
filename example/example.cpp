@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <iostream>
 #include <limits>
+#include <cmath>
 
 #include <pmmintrin.h>
 
