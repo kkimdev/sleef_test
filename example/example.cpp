@@ -24,14 +24,14 @@ enum FloatCategory
 
 using FloatRangeConfig = std::bitset<FloatCategory::SIZE>;
 
-union UIntFloat {
-  uint32_t u;
-  float f;
-};
-
 template <typename F>
 void float_loop(FloatRangeConfig config, F function)
 {
+  union UIntFloat {
+    uint32_t u;
+    float f;
+  };
+
   if (config[NEGATIVE_INFINITY])
   {
     function(-std::numeric_limits<float>::infinity());
