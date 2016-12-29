@@ -83,31 +83,45 @@ void float_loop(FloatRangeConfig config, F function)
     function(std::numeric_limits<float>::infinity());
   }
 }
-
-int main()
+template <typename F>
+void test(FloatRangeConfig config, F function)
 {
-  FloatRangeConfig config;
-  config[POSITIVE_NORMAL] = 1;
-
-  int count = 0;
   float_loop(config, [&](float x) {
     _MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
     _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
-    float result_denormal = xsinf(x);
+    float result_denormal = function(x);
 
     _MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_OFF);
     _MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_OFF);
-    float result_normal = xsinf(x);
+    float result_normal = function(x);
 
     if (result_denormal != result_normal)
     {
       std::cout << "Result differs : " << x << std::endl;
     }
-
-    if (++count == 10'000'000)
-    {
-      count = 0;
-      std::cout << "Computed " << x << std::endl;
-    }
   });
+}
+
+int main()
+{
+  FloatRangeConfig config_zero_normal;
+  config_zero_normal[NEGATIVE_NORMAL] = 1;
+  config_zero_normal[NEGATIVE_ZERO] = 1;
+  config_zero_normal[POSITIVE_ZERO] = 1;
+  config_zero_normal[POSITIVE_NORMAL] = 1;
+
+  FloatRangeConfig config_positive_zero_normal;
+  config_positive_zero_normal[POSITIVE_ZERO] = 1;
+  config_positive_zero_normal[POSITIVE_NORMAL] = 1;
+
+  test(config_zero_normal, [](float x) { return xsinf(x); });
+  test(config_zero_normal, [](float x) { return xcosf(x); });
+  test(config_zero_normal, [](float x) { return xtanf(x); });
+  test(config_zero_normal, [](float x) { return xasinf(x); });
+  test(config_zero_normal, [](float x) { return xacosf(x); });
+  test(config_zero_normal, [](float x) { return xatanf(x); });
+  test(config_zero_normal, [](float x) { return xlogf(x); });
+  test(config_zero_normal, [](float x) { return xexpf(x); });
+  test(config_zero_normal, [](float x) { return xcbrtf(x); });
+  test(config_zero_normal, [](float x) { return xilogbf(x); });
 }
